@@ -9,10 +9,6 @@ public class LRUCache {
     private final Map<Integer, DoublyLinkedList.Node> map;
     private final DoublyLinkedList list;
 
-    public LRUCache() {
-        this(5);
-    }
-
     public LRUCache(int capacity) {
         if (capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be greater than 0");

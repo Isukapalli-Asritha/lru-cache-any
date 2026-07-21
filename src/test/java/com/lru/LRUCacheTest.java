@@ -7,6 +7,31 @@ import static org.junit.jupiter.api.Assertions.*;
 class LRUCacheTest {
 
     // -------------------------------------------------------------------------
+    // Capacity = 1 (minimum valid user input)
+    // -------------------------------------------------------------------------
+
+    @Test
+    void capacityOne_evictsOnEveryInsert() {
+        LRUCache cache = new LRUCache(1);
+        cache.put(1, 10);
+        cache.put(2, 20); // evicts key 1
+
+        assertEquals(-1, cache.get(1), "Key 1 should have been evicted");
+        assertEquals(20, cache.get(2));
+        assertEquals(1, cache.size());
+    }
+
+    @Test
+    void capacityOne_updateRetainsOnlyThatEntry() {
+        LRUCache cache = new LRUCache(1);
+        cache.put(1, 10);
+        cache.put(1, 99); // update, not eviction
+
+        assertEquals(99, cache.get(1));
+        assertEquals(1, cache.size());
+    }
+
+    // -------------------------------------------------------------------------
     // Capacity < 5
     // -------------------------------------------------------------------------
 
@@ -229,5 +254,17 @@ class LRUCacheTest {
     @Test
     void constructor_negativeCapacity_throwsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> new LRUCache(-1));
+    }
+
+    @Test
+    void constructor_nonIntegerUserInput_throwsNumberFormatException() {
+        // simulates what happens when user types "abc" as capacity in Main
+        assertThrows(NumberFormatException.class, () -> Integer.parseInt("abc"));
+    }
+
+    @Test
+    void constructor_emptyUserInput_throwsNumberFormatException() {
+        // simulates user pressing enter without typing a capacity
+        assertThrows(NumberFormatException.class, () -> Integer.parseInt(""));
     }
 }
